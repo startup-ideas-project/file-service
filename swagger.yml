@@ -1,0 +1,85 @@
+swagger: "2.0"
+info:
+  description: "A collections of API provided by login services."
+  version: "1.0.0"
+  title: "Swagger Login Service"
+basePath: "/api/fileService"
+
+schemes:
+- "https"
+- "http"
+paths:
+  /upload:
+    post:
+      summary: "Add a new file to the dynamoDB, then upload to S3"
+      description: ""
+      operationId: "uploadFile"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/File"
+      responses:
+        "405":
+          description: "Invalid input"
+  /file/{fileID}:
+    get:
+      summary: "Find a file by ID"
+      description: "Returns a single file "
+      operationId: "getFileById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fileID"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/File"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "file not found"
+    delete:
+      summary: "Deletes a file"
+      operationId: "deleteFile"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "fileID"
+        in: "path"
+        description: "file id to delete"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "file not found"
+definitions:
+  File:
+    type: "object"
+    required:
+    - "name"
+    - "id"
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+        example: "myfile.txt"
+      s3Url:
+        type: "string"
+        example: "s3://myLongPath"
