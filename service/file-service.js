@@ -1,7 +1,11 @@
 'use strict';
 const {awsS3} = require('../DAO/configs/aws-s3');
 const {S3params} = require('../DAO/createS3Bucket');
-const {createRecordInS3urlPathTable, getAllFilesDAO} = require('../DAO/fileDAO');
+const {
+  createRecordInS3urlPathTable,
+  getAllFilesDAO,
+  getFileByIdDAO,
+  getS3ObjectDAO} = require('../DAO/fileDAO');
 const fs = require('fs')
 const stream = require('stream');
 const { v4: uuidv4 } = require('uuid');
@@ -27,20 +31,12 @@ const deleteFile = (fileID) => {
  * fileID UUID ID of a file
  * returns File
  **/
-const getFileById = (fileID) => {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "s3Url" : "s3://myLongPath",
-  "name" : "myfile.txt",
-  "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+const getFileById = async (req, res) => {
+  const fileId = req.params.fileID
+  getFileByIdDAO(fileId).then(data => {
+    console.log(data)
+    res.send(JSON.stringify(data))
+  })
 }
 
 
@@ -60,10 +56,14 @@ const uploadFile = async (req, res) => {
       bucketName: data.Bucket,
       fileName: file.name
     })
-  ).then(_ => res.sendStatus(200)).catch(err => {
-    console.log(err)
-    res.sendStatus(500)
-  });
+  ).then(_ => res.sendStatus(200)).catch(err => res.sendStatus(500));
+}
+
+// ============== S3 bucket interaction =================
+const loadS3File = async (req, res) => {
+  const fileId = req.params.fileID
+  const stream = getS3ObjectDAO(fileId)
+  stream.pipe(res)
 }
 
 
@@ -82,6 +82,7 @@ const uploadToS3 = (file) => {
 }
 
 //============ the following functions not added to YAML ===========
+
 const getAllFiles = async (req, res) => {
   getAllFilesDAO().then(data => res.send(JSON.stringify(data)))
 }
@@ -90,6 +91,7 @@ module.exports = {
   deleteFile,
   getFileById,
   uploadFile,
-  getAllFiles
+  getAllFiles,
+  loadS3File
 }
 

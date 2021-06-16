@@ -10,7 +10,8 @@ const {
     deleteFile,
     getFileById,
     uploadFile,
-    getAllFiles
+    getAllFiles,
+    loadS3File
 } = require('./service/file-service')
 
 
@@ -33,8 +34,9 @@ const port = process.env.PORT || 4040
 
 app.post('/file', uploadFile)
 app.get('/file', getAllFiles)
-app.get('/file/{fileID}',getFileById)
-app.delete('/file/{fileID}', deleteFile)
+app.get('/file/:fileID',getFileById)
+app.get('/file/:fileID/load',loadS3File)
+app.delete('/file/:fileID', deleteFile)
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

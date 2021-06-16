@@ -1,6 +1,8 @@
 const {dynamoDBClient} = require('./configs/dynamoDB')
 const {S3TableParams} = require('./create-tables')
-const { v4: uuidv4 } = require('uuid');;
+const {S3params} = require('./createS3Bucket')
+const { v4: uuidv4 } = require('uuid');const { awsS3 } = require('./configs/aws-s3');
+;
 
 // doc: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html
 
@@ -35,7 +37,25 @@ const getAllFilesDAO = () => {
     return dynamoDBClient.scan(params).promise()
 }
 
+const getFileByIdDAO = (id) => {
+    const params = {
+        TableName: S3TableParams.TableName,
+        key: id
+    }
+    return dynamoDBClient.scan(params).promise()
+}
+
+const getS3ObjectDAO = (key) => {
+    const params = {
+        Bucket: S3params.Bucket,
+        Key: key
+    }
+    return awsS3.getObject(params).createReadStream()
+}
+
 module.exports = {
     createRecordInS3urlPathTable,
-    getAllFilesDAO
+    getAllFilesDAO,
+    getFileByIdDAO,
+    getS3ObjectDAO
 }
