@@ -1,8 +1,8 @@
 const {dynamoDBClient} = require('./configs/dynamoDB')
 const {S3TableParams} = require('./create-tables')
 const {S3params} = require('./createS3Bucket')
-const { v4: uuidv4 } = require('uuid');const { awsS3 } = require('./configs/aws-s3');
-;
+const { v4: uuidv4 } = require('uuid');
+const { awsS3 } = require('./configs/aws-s3');
 
 // doc: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html
 
