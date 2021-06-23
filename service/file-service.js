@@ -34,7 +34,6 @@ const deleteFile = (fileID) => {
 const getFileById = async (req, res) => {
   const fileId = req.params.fileID
   getFileByIdDAO(fileId).then(data => {
-    console.log(data)
     res.send(JSON.stringify(data))
   })
 }

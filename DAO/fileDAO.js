@@ -39,8 +39,11 @@ const getAllFilesDAO = () => {
 
 const getFileByIdDAO = (id) => {
     const params = {
-        TableName: S3TableParams.TableName,
-        key: id
+        TableName: S3TableParams.TableName, 
+        FilterExpression: `key = :key`,
+        ExpressionAttributeValues:{
+            ":key": id
+        }
     }
     return dynamoDBClient.scan(params).promise()
 }
