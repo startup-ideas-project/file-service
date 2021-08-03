@@ -55,7 +55,10 @@ const uploadFile = async (req, res) => {
       bucketName: data.Bucket,
       fileName: file.name
     })
-  ).then(_ => res.sendStatus(200)).catch(err => res.sendStatus(500));
+  ).then(_ => res.sendStatus(200)).catch(err => {
+    console.log(err)
+    res.sendStatus(500)
+  });
 }
 
 // ============== S3 bucket interaction =================

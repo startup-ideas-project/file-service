@@ -21,8 +21,8 @@ const corsOptions = {
 
 // these 2 steps need to move to another resources scripts, this is only for testing
 // restart the server will fail these creation steps
-createS3Table(); // Create the table
-createBucket() // create S3 Bucket
+// createS3Table(); // Create the table
+// createBucket() // create S3 Bucket
 
 // app configs
 const app = express()
@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(cors(corsOptions))
 app.use(formidableMiddleware());
 
-const port = process.env.PORT || 4040
+const port = process.env.PORT || 9000
 
 app.post('/file', uploadFile)
 app.get('/file', getAllFiles)
